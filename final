@@ -9,36 +9,40 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.print("(i) target ip address: ");
         String ip = scan.nextLine();
-        connect(ip);
+        System.out.print("(i) enter username: ");
+        String un = scan.nextLine();
+        connect(ip, un);
     }
-    public static void connect(String ip) {
+    public static void connect(String ip, String un) {
         try {
             Socket client = new Socket(ip, 4444);
             System.out.println("(i) connected to (" + ip + ").");
-            sendRead(client);
-        } catch (IOException e) {server(ip);}
+            sendRead(client, un);
+        } catch (IOException e) {server(ip, un);}
     }
-    public static void server(String ip) {
+    public static void server(String ip, String un) {
         try {
             System.out.println("(i) connection to (" + ip + ") has failed.");
             ServerSocket server = new ServerSocket(4444);
             System.out.println("(i) awaiting connection...");
             Socket client = server.accept();
-            sendRead(client);
+            sendRead(client, un);
         } catch (IOException e) {System.out.println("(!!!) ioexception.");}
     }
-    public static void sendRead(Socket client) {
+    public static void sendRead(Socket client, String un) {
         System.out.println("(i) user successfully connected.");
         try {
             Scanner scan = new Scanner(System.in);
             DataInputStream in = new DataInputStream(client.getInputStream());
             DataOutputStream out = new DataOutputStream(client.getOutputStream());
+            out.writeUTF(un);
+            String user = in.readUTF();
             new Thread() {
                 public void run() {
                     while (true) {
                         try {
                             TimeUnit.SECONDS.sleep(1);
-                            System.out.println("received: " + in.readUTF());
+                            System.out.println(user + ": " + in.readUTF());
                         } catch (IOException | InterruptedException e) {
                             System.out.println("(i) other user disconnected. exiting program...");
                             System.exit(0);
