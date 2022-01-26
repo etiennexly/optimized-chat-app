@@ -28,6 +28,7 @@ public class Main {
         } catch (IOException e) {System.out.println("(!!!) ioexception.");}
     }
     public static void sendRead(Socket client) {
+        System.out.println("(i) user successfully connected.");
         try {
             Scanner scan = new Scanner(System.in);
             DataInputStream in = new DataInputStream(client.getInputStream());
