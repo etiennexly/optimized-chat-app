@@ -40,9 +40,11 @@ public class Main {
                             TimeUnit.SECONDS.sleep(1);
                             System.out.println("received: " + in.readUTF());
                         } catch (IOException e) {
-                            System.out.println("(!!!) ioexception.");
+                            System.out.println("(!!!) other user disconnected.");
+                            System.exit(0);
                         } catch (InterruptedException e) {
                             System.out.println("(!!!) sleep cycle has been cancelled.");
+                            System.exit(0);
                         }
                     }
                 }
@@ -50,12 +52,10 @@ public class Main {
             new Thread() {
                 public void run() {
                     try {
-                        System.out.print("send: ");
                         String msg = scan.nextLine();
                         out.writeUTF(msg);
                     } catch (IOException e) {
-                        System.out.println("(!!!) other user disconnected.");
-                        System.exit(0);
+                        System.out.println("(!!!) ioexception.");
                     }
                 }
             }.start();
