@@ -37,30 +37,26 @@ public class Main {
             DataOutputStream out = new DataOutputStream(client.getOutputStream());
             out.writeUTF(un);
             String user = in.readUTF();
-            new Thread() {
-                public void run() {
-                    while (true) {
-                        try {
-                            TimeUnit.SECONDS.sleep(1);
-                            System.out.println(user + ": " + in.readUTF());
-                        } catch (IOException | InterruptedException e) {
-                            System.out.println("(i) other user disconnected. exiting program...");
-                            System.exit(0);
-                        }
+            new Thread(() -> {
+                while (true) {
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                        System.out.println(user + ": " + in.readUTF());
+                    } catch (IOException | InterruptedException e) {
+                        System.out.println("(i) other user disconnected. exiting program...");
+                        System.exit(0);
                     }
                 }
-            }.start();
-            new Thread() {
-                public void run() {
-                    while (true) {
-                        try {
-                            TimeUnit.SECONDS.sleep(1);
-                            String msg = scan.nextLine();
-                            if (msg.equals("/quit")) {System.exit(0);} else {out.writeUTF(msg);}
-                        } catch (IOException | InterruptedException e) {System.out.println("(!!!) ioexception.");}
-                    }
+            }).start();
+            new Thread(() -> {
+                while (true) {
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                        String msg = scan.nextLine();
+                        if (msg.equals("/quit")) {System.exit(0);} else {out.writeUTF(msg);}
+                    } catch (IOException | InterruptedException e) {System.out.println("(!!!) ioexception.");}
                 }
-            }.start();
+            }).start();
         } catch (IOException e) {System.out.println("(!!!) ioexception.");}
     }
 }
